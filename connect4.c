@@ -27,7 +27,7 @@ void initialize_board(board_t board) {
 }
 
 int has_won(board_t board, player_t player) {
-    // Check for horizontal wins
+    // horizontal win
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 2; col++) {
             if (board[row][col] == player && board[row][col + 1] == player &&
@@ -37,7 +37,7 @@ int has_won(board_t board, player_t player) {
         }
     }
 
-    // Check for vertical wins
+    // vert win
     for (int row = 0; row < 1; row++) {
         for (int col = 0; col < 5; col++) {
             if (board[row][col] == player && board[row + 1][col] == player &&
@@ -47,7 +47,7 @@ int has_won(board_t board, player_t player) {
         }
     }
 
-    // Check for diagonal wins (both directions)
+    // diag win
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 5; col++) {
             if (row + 3 < 4 && col + 3 < 5) {
@@ -145,7 +145,7 @@ move_t best_move(board_t board, player_t player) {
     return temp;
 }
 
-void print_board(board_t board) {
+void print_board(board_t board,int choice) {
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 5; col++) {
             switch (board[row][col]) {
@@ -153,10 +153,18 @@ void print_board(board_t board) {
                     printf("0  ");
                     break;
                 case RED:
-                    printf("R  ");
+                    if (choice == 2) {
+                        printf("B  "); // Change Red to Blue if choice is 2
+                    } else {
+                        printf("R  "); // Keep it as Red for choice 1
+                    }
                     break;
                 case BLUE:
-                    printf("B  ");
+                    if (choice == 2) {
+                        printf("R  "); 
+                    } else {
+                        printf("B  "); 
+                    }
                     break;
             }
         }
@@ -170,13 +178,16 @@ int main() {
     board_t board;
     move_t result;
     int choice;
-    printf("You are blue color. Enter 2 if you want to move first, or 1 if you want to move second: ");
+    printf("Choose your color:\n");
+    printf("1. Red\n");
+    printf("2. Blue\n");
+    printf("Enter 1 or 2 to select your color: ");
     scanf("%d", &choice);
     player_t current;
     if (choice == 1) {
-        current = BLUE;
-    } else if (choice == 2) {
         current = RED;
+    } else if (choice == 2) {
+        current = BLUE;
     } else {
         printf("Invalid choice. Please select 1 or 2.\n");
         return 1;
@@ -187,7 +198,7 @@ int main() {
             printf("Invalid choice. Please select 1 or 2.\n");
             break;
         }
-        print_board(board);
+        print_board(board, choice);
         printf("\n\n");
         if (current == RED) {
             printf("0  1  2  3  4\n");
@@ -208,7 +219,7 @@ int main() {
             }
         }
         if (has_won(board, current)) {
-            print_board(board);
+            print_board;
             printf("%c has won!\n", (current == RED) ? 'R' : 'B');
             break;
         } else if (is_full(board)) {
